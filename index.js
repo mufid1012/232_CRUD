@@ -32,17 +32,18 @@ db.connect((err) => {
     console.log('Connctions Succesfully!');
 });
 
+// GET all mahasiswa
 app.get('/mahasiswa', (req, res) => {
-    db.query('SELECT * FROM biodata', (err, results) => {
+    db.query('SELECT * FROM mahasiswa', (err, results) => {
         if (err) {
             console.error('Error fetching data: ' + err.stack);
-            res.status(500).send('Error fetching data');
-            return;
+            return res.status(500).send('Error fetching data');
         }
         res.json(results);
     });
 });
 
+// POST new mahasiswa
 app.post('/mahasiswa', (req, res) => {
     const { nama, nim, kelas, prodi } = req.body;
 
@@ -51,25 +52,25 @@ app.post('/mahasiswa', (req, res) => {
     }
 
     db.query(
-        'INSERT INTO biodata (nama, nim, kelas, prodi) VALUES (?, ?, ?, ?)', 
+        'INSERT INTO mahasiswa (nama, nim, kelas, prodi) VALUES (?, ?, ?, ?)', 
         [nama, nim, kelas, prodi], 
         (err, results) => {
             if (err) {
-            console.error(err);
-            return res.status(500).json('Database Error');}
-            
-
-                res.status(201).json({ message: 'User created successfully'});
-
-            });
+                console.error(err);
+                return res.status(500).json('Database Error');
+            }
+            res.status(201).json({ message: 'User created successfully' });
+        }
+    );
 });
 
+// PUT update mahasiswa
 app.put('/mahasiswa/:id', (req, res) => {
-    const userid =req.params.id;
+    const userid = req.params.id;
     const { nama, nim, kelas, prodi } = req.body;
 
     db.query(
-        'UPDATE biodata SET nama = ?, nim = ?, kelas = ?, prodi = ? WHERE id = ?',
+        'UPDATE mahasiswa SET nama = ?, nim = ?, kelas = ?, prodi = ? WHERE id = ?',
         [nama, nim, kelas, prodi, userid],
         (err, results) => {
             if (err) {
@@ -81,9 +82,10 @@ app.put('/mahasiswa/:id', (req, res) => {
     );
 });
 
+// DELETE mahasiswa
 app.delete('/mahasiswa/:id', (req, res) => {
     const userid = req.params.id;
-    db.query('DELETE FROM biodata WHERE id = ?', [userid], (err, results) => {
+    db.query('DELETE FROM mahasiswa WHERE id = ?', [userid], (err, results) => {
         if (err) {
             console.error(err);
             return res.status(500).json('Database Error');
