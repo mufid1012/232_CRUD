@@ -23,3 +23,11 @@ const db = mysql.createConnection({
   database: 'Biodata',
   port: 3307    
 });
+
+db.connect((err) => {
+    if (err) {
+        console.error('Error connecting to the database:', err.stack);
+        return;
+    }
+    console.log('Connctions Succesfully!');
+});
