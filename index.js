@@ -31,3 +31,14 @@ db.connect((err) => {
     }
     console.log('Connctions Succesfully!');
 });
+
+app.get('/biodata', (req, res) => {
+    db.query('SELECT * FROM biodata', (err, results) => {
+        if (err) {
+            console.error('Error fetching data: ' + err.stack);
+            res.status(500).send('Error fetching data');
+            return;
+        }
+        res.json(results);
+    });
+});
