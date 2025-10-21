@@ -32,7 +32,7 @@ db.connect((err) => {
     console.log('Connctions Succesfully!');
 });
 
-app.get('/biodata', (req, res) => {
+app.get('/mahasiswa', (req, res) => {
     db.query('SELECT * FROM biodata', (err, results) => {
         if (err) {
             console.error('Error fetching data: ' + err.stack);
@@ -41,4 +41,42 @@ app.get('/biodata', (req, res) => {
         }
         res.json(results);
     });
+});
+
+app.post('/mahasiswa', (req, res) => {
+    const { nama, nim, kelas, prodi } = req.body;
+
+    if (!nama || !nim || !kelas || !prodi) {
+        return res.status(400).json('All fields are required');
+    }
+
+    db.query(
+        'INSERT INTO biodata (nama, nim, kelas, prodi) VALUES (?, ?, ?, ?)', 
+        [nama, nim, kelas, prodi], 
+        (err, results) => {
+            if (err) {
+            console.error(err);
+            return res.status(500).json('Database Error');}
+            
+
+                res.status(201).json({ message: 'User created successfully'});
+
+            });
+});
+
+app.put('/mahasiswa/:id', (req, res) => {
+    const userid =req.params.id;
+    const { nama, nim, kelas, prodi } = req.body;
+
+    db.query(
+        'UPDATE biodata SET nama = ?, nim = ?, kelas = ?, prodi = ? WHERE id = ?',
+        [nama, nim, kelas, prodi, userid],
+        (err, results) => {
+            if (err) {
+                console.error(err);
+                return res.status(500).json('Database Error');
+            }
+            res.json({ message: 'User updated successfully' });
+        }
+    );
 });
